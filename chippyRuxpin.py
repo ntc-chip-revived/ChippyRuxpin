@@ -95,7 +95,7 @@ def talk(myText):
     
     os.system( "espeak \",...\" 2>/dev/null" ) # Sometimes the beginning of audio can get cut off. Insert silence.
     time.sleep( 0.5 )
-    os.system( "espeak -w speech.wav \"" + myText + "\" -s 130" )
+    subprocess.call(["espeak", "-w", "speech.wav", myText, "-s", "130"])
     audio.play("speech.wav")
     return myText
 
