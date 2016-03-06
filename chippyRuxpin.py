@@ -31,9 +31,9 @@ from chippyRuxpin_webFramework import WebFramework
 fullMsg = ""
 
 MOUTH_OPEN = 408 # GPIO pin assigned to open the mouth. XIO-P0
-MOUTH_CLOSE = 412 # GPIO pin assigned to close the mouth. XIO-P2
-EYES_OPEN = 410 # GPIO pin assigned to open the eyes. XIO-P4
-EYES_CLOSE = 414 # GPIO pin assigned to close the eyes. XIO-P6
+MOUTH_CLOSE = 410 # GPIO pin assigned to close the mouth. XIO-P2
+EYES_OPEN = 414 # GPIO pin assigned to open the eyes. XIO-P4
+EYES_CLOSE = 412 # GPIO pin assigned to close the eyes. XIO-P6
 
 io = GPIO() #Establish connection to our GPIO pins.
 io.setup( MOUTH_OPEN )
@@ -63,7 +63,7 @@ def updateMouth():
                 io.set( MOUTH_OPEN, 0 )
                 io.set( MOUTH_CLOSE, 1 )
         else:
-            if( time.time() - lastMouthEventTime > 0.4 ):
+            if( time.time() - lastMouthEventTime > 0.21 ):
                 io.set( MOUTH_OPEN, 0 )
                 io.set( MOUTH_CLOSE, 0 )
 
@@ -72,13 +72,13 @@ def updateEyes():
     while isRunning:
         io.set( EYES_CLOSE, 1 )
         io.set( EYES_OPEN, 0 )
-        time.sleep(0.4)
+        time.sleep(0.185)
         io.set( EYES_CLOSE, 0 )
         io.set( EYES_OPEN, 1 )
-        time.sleep(0.4)
+        time.sleep(0.185)
         io.set( EYES_CLOSE, 1 )
         io.set( EYES_OPEN, 0 )
-        time.sleep(0.4)
+        time.sleep(0.185)
         io.set( EYES_CLOSE, 0 )
         io.set( EYES_OPEN, 0 )
         time.sleep( randint( 0,7) )
