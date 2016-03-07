@@ -1,3 +1,4 @@
+
 #!/usr/bin/python
 # Chippy Ruxpin by Next Thing Co
 # Powered by C.H.I.P., the world's first $9 computer!
@@ -32,14 +33,18 @@ fullMsg = ""
 
 MOUTH_OPEN = 408 # GPIO pin assigned to open the mouth. XIO-P0
 MOUTH_CLOSE = 410 # GPIO pin assigned to close the mouth. XIO-P2
-EYES_OPEN = 414 # GPIO pin assigned to open the eyes. XIO-P4
-EYES_CLOSE = 412 # GPIO pin assigned to close the eyes. XIO-P6
+EYES_OPEN = 412 # GPIO pin assigned to open the eyes. XIO-P4
+EYES_CLOSE = 414 # GPIO pin assigned to close the eyes. XIO-P6
+
+POWER_BOOST_ENABLE = 119 # LCD pin to enable/disable low power mode on 12v buck converter
+
 
 io = GPIO() #Establish connection to our GPIO pins.
 io.setup( MOUTH_OPEN )
 io.setup( EYES_OPEN )
 io.setup( MOUTH_CLOSE )
 io.setup( EYES_CLOSE )
+io.setup( POWER_BOOST_ENABLE )
 
 audio = None
 isRunning = True
@@ -53,6 +58,7 @@ def updateMouth():
         
     while isRunning:
         if( audio.mouthValue != lastMouthEvent ):
+	    io.set( POWER_BOOST_ENABLE, 1 )
             lastMouthEvent = audio.mouthValue
             lastMouthEventTime = time.time()
 
@@ -70,18 +76,17 @@ def updateMouth():
 # A routine for blinking the eyes in a semi-random fashion.
 def updateEyes():
     while isRunning:
+	io.set( POWER_BOOST_ENABLE, 1 )
         io.set( EYES_CLOSE, 1 )
         io.set( EYES_OPEN, 0 )
-        time.sleep(0.185)
+        time.sleep(0.3)
         io.set( EYES_CLOSE, 0 )
         io.set( EYES_OPEN, 1 )
-        time.sleep(0.185)
-        io.set( EYES_CLOSE, 1 )
-        io.set( EYES_OPEN, 0 )
-        time.sleep(0.185)
+        time.sleep(0.3)
         io.set( EYES_CLOSE, 0 )
         io.set( EYES_OPEN, 0 )
-        time.sleep( randint( 0,7) )
+	io.set( POWER_BOOST_ENABLE, 0 ) 
+        time.sleep( randint( 1,7) )
    
 def talk(myText):
     if( myText.find( "twitter" ) >= 0 ):
@@ -99,6 +104,7 @@ def talk(myText):
     audio.play("speech.wav")
     return myText
 
+os.system( "sudo axp209 --no_limit" ) # Turn off AXP209 power current limiting
 mouthThread = Thread(target=updateMouth)
 mouthThread.start()
 eyesThread = Thread(target=updateEyes)
