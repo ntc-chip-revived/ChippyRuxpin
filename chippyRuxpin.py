@@ -36,7 +36,7 @@ MOUTH_CLOSE = 410 # GPIO pin assigned to close the mouth. XIO-P2
 EYES_OPEN = 412 # GPIO pin assigned to open the eyes. XIO-P4
 EYES_CLOSE = 414 # GPIO pin assigned to close the eyes. XIO-P6
 
-POWER_BOOST_ENABLE = 119 # LCD pin to enable/disable low power mode on 12v buck converter
+POWER_BOOST_ENABLE = 415 # LCD pin to enable/disable low power mode on 12v buck converter
 
 
 io = GPIO() #Establish connection to our GPIO pins.
@@ -69,7 +69,7 @@ def updateMouth():
                 io.set( MOUTH_OPEN, 0 )
                 io.set( MOUTH_CLOSE, 1 )
         else:
-            if( time.time() - lastMouthEventTime > 0.21 ):
+            if( time.time() - lastMouthEventTime > 0.18 ):
                 io.set( MOUTH_OPEN, 0 )
                 io.set( MOUTH_CLOSE, 0 )
 
@@ -79,10 +79,10 @@ def updateEyes():
 	io.set( POWER_BOOST_ENABLE, 1 )
         io.set( EYES_CLOSE, 1 )
         io.set( EYES_OPEN, 0 )
-        time.sleep(0.3)
+        time.sleep(0.25)
         io.set( EYES_CLOSE, 0 )
         io.set( EYES_OPEN, 1 )
-        time.sleep(0.3)
+        time.sleep(0.4)
         io.set( EYES_CLOSE, 0 )
         io.set( EYES_OPEN, 0 )
 	io.set( POWER_BOOST_ENABLE, 0 ) 
@@ -100,7 +100,7 @@ def talk(myText):
     
     os.system( "espeak \",...\" 2>/dev/null" ) # Sometimes the beginning of audio can get cut off. Insert silence.
     time.sleep( 0.5 )
-    subprocess.call(["espeak", "-w", "speech.wav", myText, "-s", "130"])
+    subprocess.call(["espeak","-ven-us", "-w", "speech.wav", "'"+myText+"  '", "-s", "130"])
     audio.play("speech.wav")
     return myText
 

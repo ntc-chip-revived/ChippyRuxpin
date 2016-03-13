@@ -50,7 +50,7 @@ class AudioPlayer:
              max_l = audioop.max(channel_l,2)/max_vol_factor
              max_r = audioop.max(channel_r,2)/max_vol_factor
 
-             for i in range (1,8):
+             for i in range (1,16):
                 self.generateMouthSignal((1<<max_r)-1)
                 
              data = wavfile.readframes(chunk)
