@@ -14,6 +14,9 @@ class WebFramework:
         print( "In your browser, go to " + str(self.ip) + ":8080")
         print( "---------")
         self.talkFunc = func
+	
+	greeting = "Chippy Ruxpin is online! http colon slash slash " + str(self.ip) + " colon 8 0 8 0 ! Again: http colon slash slash " + str(self.ip) + " colon 8 0 8 0"
+	func( greeting.replace(".", " dot " ))
         
         @route('/')
         def index():
@@ -26,7 +29,7 @@ class WebFramework:
         @post('/')
         def speak():
             speech = request.forms.get('speech')            
-            self.talkFunc( speech )
+            self.talkFunc( speech.lower() )
             redirect('/')
 
         run(host=self.ip, port=8080, debug=True)

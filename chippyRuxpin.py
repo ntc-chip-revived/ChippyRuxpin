@@ -31,20 +31,16 @@ from chippyRuxpin_webFramework import WebFramework
 
 fullMsg = ""
 
-MOUTH_OPEN = 408 # GPIO pin assigned to open the mouth. XIO-P0
-MOUTH_CLOSE = 410 # GPIO pin assigned to close the mouth. XIO-P2
-EYES_OPEN = 412 # GPIO pin assigned to open the eyes. XIO-P4
-EYES_CLOSE = 414 # GPIO pin assigned to close the eyes. XIO-P6
-
-POWER_BOOST_ENABLE = 415 # LCD pin to enable/disable low power mode on 12v buck converter
-
+MOUTH_OPEN = 410 # GPIO pin assigned to open the mouth. XIO-P0
+MOUTH_CLOSE = 408 # GPIO pin assigned to close the mouth. XIO-P2
+EYES_OPEN = 414 # GPIO pin assigned to open the eyes. XIO-P4
+EYES_CLOSE = 412 # GPIO pin assigned to close the eyes. XIO-P6
 
 io = GPIO() #Establish connection to our GPIO pins.
 io.setup( MOUTH_OPEN )
 io.setup( EYES_OPEN )
 io.setup( MOUTH_CLOSE )
 io.setup( EYES_CLOSE )
-io.setup( POWER_BOOST_ENABLE )
 
 audio = None
 isRunning = True
@@ -58,7 +54,6 @@ def updateMouth():
         
     while isRunning:
         if( audio.mouthValue != lastMouthEvent ):
-	    io.set( POWER_BOOST_ENABLE, 1 )
             lastMouthEvent = audio.mouthValue
             lastMouthEventTime = time.time()
 
@@ -69,23 +64,21 @@ def updateMouth():
                 io.set( MOUTH_OPEN, 0 )
                 io.set( MOUTH_CLOSE, 1 )
         else:
-            if( time.time() - lastMouthEventTime > 0.18 ):
+            if( time.time() - lastMouthEventTime > 0.15 ):
                 io.set( MOUTH_OPEN, 0 )
                 io.set( MOUTH_CLOSE, 0 )
 
 # A routine for blinking the eyes in a semi-random fashion.
 def updateEyes():
     while isRunning:
-	io.set( POWER_BOOST_ENABLE, 1 )
         io.set( EYES_CLOSE, 1 )
         io.set( EYES_OPEN, 0 )
-        time.sleep(0.25)
+        time.sleep(0.2)
         io.set( EYES_CLOSE, 0 )
         io.set( EYES_OPEN, 1 )
-        time.sleep(0.4)
+        time.sleep(0.2)
         io.set( EYES_CLOSE, 0 )
-        io.set( EYES_OPEN, 0 )
-	io.set( POWER_BOOST_ENABLE, 0 ) 
+        io.set( EYES_OPEN, 0 ) 
         time.sleep( randint( 1,7) )
    
 def talk(myText):
