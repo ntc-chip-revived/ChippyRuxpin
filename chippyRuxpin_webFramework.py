@@ -4,6 +4,7 @@
 # Powered by C.H.I.P., the world's first $9 computer!
 
 from bottle import run, get, post, request, route, redirect
+from threading import Thread
 import socket
 
 class WebFramework:
@@ -16,8 +17,14 @@ class WebFramework:
         self.talkFunc = func
 	
 	greeting = "Chippy Ruxpin is online! http colon slash slash " + str(self.ip) + " colon 8 0 8 0 ! Again: http colon slash slash " + str(self.ip) + " colon 8 0 8 0"
-	func( greeting.replace(".", " dot " ))
+
+	def init():
+		func( greeting.replace(".", " dot " ))
         
+	init = Thread(target=init)
+        init.start()
+        self.talkFunc = func
+
         @route('/')
         def index():
             return '''
