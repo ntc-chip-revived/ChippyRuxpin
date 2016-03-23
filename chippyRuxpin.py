@@ -109,6 +109,15 @@ if( consumerKey.find( 'TWITTER' ) >= 0 ):
 else:
     twitter = ChippyTwitter(consumerKey,consumerSecret,accessTokenKey,accessTokenSecret)
 
+def userInput():
+	time.sleep(10)
+	while isRunning:
+		user_input = raw_input("Some input please: ")
+		talk(user_input)
+
+inputThread = Thread(target=userInput)
+inputThread.start()
+
 web = WebFramework(talk)
 isRunning = False
 io.cleanup()
